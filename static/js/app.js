@@ -1,11 +1,4 @@
-// import JSON
 
-// d3.json("samples.json").then(function(data) {
-//     console.log(data);
-//   });
-
-// function init(){
-  
   //////////////////////////////////////////////
   /// ID Dropdown List ///
   function optionChanged(){
@@ -28,12 +21,10 @@
 
     // Store Chosen ID for later reference //
     var chosen_id = d3.select("#selDataset").node().value;
-
-    // // Set default to "" //
-    // d3.select("#selDataset").node().value = ""
-
+    
     // Call the "UpdateCharts" Function with "chosen_id" //
     UpdateCharts(chosen_id);
+    
   }
   optionChanged();
 
@@ -59,11 +50,11 @@
           var test_subject_info = Object.entries(row)
           // console.log(test_subject_info);
           
-          test_subject_info.forEach((key, value) => {
+          test_subject_info.forEach((info) => {
             d3.selectAll("#sample-metadata")
             .append("div")
-            // .data(info)
-            .text(`${key}: ${value}`)
+            .data(info)
+            .text(`${info[0]}: ${info[1]}`)
           });
         }
       });
@@ -134,11 +125,11 @@
           console.log(bubblechart)
 
           var layout2 = {
-            title: `Test Subject #${chosen_id} Results`,
-            yaxis: {
+              yaxis: {
               autorange: true,
             },
             xaxis: {
+              title: `OTU ID`,
               autorange: true,
             },
           };
@@ -149,7 +140,4 @@
         }
       });
     });
-  }
-// }
-
-// init();
+  };
