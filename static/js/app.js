@@ -54,37 +54,40 @@
       demo_info.forEach(function(row){
         if (row.id === parseInt(chosen_id)) {
           d3.select("#sample-metadata").html("");
-          console.log(row.id);
+          // console.log(row.id);
 
           var test_subject_info = Object.entries(row)
           // console.log(test_subject_info);
           
-          test_subject_info.forEach((info) => {
+          test_subject_info.forEach((key, value) => {
             d3.selectAll("#sample-metadata")
             .append("div")
             // .data(info)
-            .text(`${info[0]}: ${info[1]}`)
+            .text(`${key}: ${value}`)
           });
         }
       });
-    
+      
       //////////////////////////////////////////////
-      /// Top 10 OTUs (Bar Chart) ///
+      /// Dashboard Visuals ///
+
       samples_data.forEach(function(row){
         if (row.id === chosen_id) {
-          console.log(row);
 
           var otu_ids = row.otu_ids;
           var otu_labels = row.otu_labels;
           var samp_vals = row.sample_values;
-          console.log(otu_ids, otu_labels, samp_vals);
+          // console.log(chosen_id);
+
+
+          /// Top 10 OTUs (Bar Chart) ///
 
           var trace1 = {
-            type: 'bar',
-            oreintation: 'h',
             x: samp_vals.slice(0,10),
-            y: otu_ids.map(id => String `OTU ${id}`),
-            text: row.otu_labels,
+            y: otu_ids.map(id => String( `OTU ${id}`)),
+            type: "bar",
+            orientation: "h",
+            text: otu_labels,
             transforms: [{
               type: 'sort',
               target: 'y',
@@ -92,10 +95,11 @@
             }],
           };
 
-          barchart = [trace1];
+          var barchart = [trace1];
+          console.log(barchart)
 
-          var layout = {
-            title: `Test Subject ${chosen_id} Results`,
+          var layout1 = {
+            title: `Test Subject #${chosen_id} Results`,
             yaxis: {
               autorange: true,
             },
@@ -104,19 +108,46 @@
             },
           };
 
-          Plotly.newPlot('bar', barchart, layout);
+          Plotly.newPlot("bar", barchart, layout1);
+        
+        
+          /// OTU ID vs Sample Values (Bubble Chart) ///
+
+          var trace2 = {
+            x: otu_ids,
+            y: samp_vals,
+            text: otu_labels,
+            type: "scatter",
+            mode: 'markers',
+            marker: {
+              size: samp_vals,
+              color: otu_ids
+            },
+            transforms: [{
+              type: 'sort',
+              target: 'y',
+              order: 'descending'
+            }],
+          };
+
+          var bubblechart = [trace2];
+          console.log(bubblechart)
+
+          var layout2 = {
+            title: `Test Subject #${chosen_id} Results`,
+            yaxis: {
+              autorange: true,
+            },
+            xaxis: {
+              autorange: true,
+            },
+          };
+
+          Plotly.newPlot("bubble", bubblechart, layout2);
+
+
         }
       });
-      
-      //////////////////////////////////////////////
-      /// OTU ID vs Sample Values (Bubble Chart) ///
-      
-
-      //////////////////////////////////////////////
-      /// OPT: Scrubs per Week (Gauge Chart) ///
-      
-    
-    
     });
   }
 // }
